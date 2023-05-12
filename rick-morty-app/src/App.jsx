@@ -1,38 +1,23 @@
-//Rick & Morty API =>  https://rickandmortyapi.com/api/character
-import { useState, useEffect } from 'react';
-import Header from './components/Header';
+import { Route, Routes } from 'react-router-dom';
+import {
+  DetailPage,
+  HomePage,
+  LocationPage,
+} from './pages';
 
-function App() {
-  const [characters, setCharacters] = useState(null);
-
-  useEffect(() => {
-    fetch('https://rickandmortyapi.com/api/character')
-      .then((response) => response.json())
-      .then((data) => setCharacters(data.results));
-  }, []);
-
+export default function App() {
   return (
-    <>
-      <Header />
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/location" element={<LocationPage />} />
 
-      <main className="mt-5 px-5">
-        {/* Search Bar */}
+      <Route path="/characters">
+        <Route index element={<HomePage />} />
+        {/* /characters/1 */}
+        <Route path=":id" element={<DetailPage />} />
+      </Route>
 
-        <section className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-5">
-          {characters?.map((character, index) => (
-            <div key={index} className="bg-slate-300 shadow-md flex flex-col space-y-3">
-              <img
-                src={character.image}
-                alt={character.name}
-              />
-
-              <h2>{character.name}</h2>
-            </div>
-          ))}
-        </section>
-      </main>
-    </>
+      <Route path='*' element={<h1>PAGE NOT FOUND</h1>} /> 
+    </Routes>
   );
 }
-
-export default App;
